@@ -1,0 +1,129 @@
+# smithery.yaml
+
+startCommand:
+  type: stdio
+  # configSchema defines the values required by the user to configure the MCP server via Smithery.
+  # It is based on the information in the env.example file and README.md.
+  configSchema:
+    type: object
+    required:
+      - DB_HOST
+      - DB_PORT
+      - DB_DATABASE
+      - DB_USER
+      - DB_PASSWORD
+    properties:
+      DB_HOST:
+        type: string
+        title: 'Database Host'
+        description: 'Database server host name or IP address'
+      DB_PORT:
+        type: integer
+        title: 'Database Port'
+        description: 'Database server port number'
+        default: 1433
+      DB_DATABASE:
+        type: string
+        title: 'Database Name'
+        description: 'Name of the database to connect to'
+      DB_USER:
+        type: string
+        title: 'Database User'
+        description: 'Database username'
+      DB_PASSWORD:
+        type: string
+        title: 'Database Password'
+        description: 'Database user password'
+        format: password # Hint for UI to hide input
+      DB_ENCRYPT:
+        type: boolean
+        title: 'Encrypt Connection (DB_ENCRYPT)'
+        description: 'Whether to encrypt the database connection'
+        default: false
+      DB_TRUST_SERVER_CERTIFICATE:
+        type: boolean
+        title: 'Trust Server Certificate (DB_TRUST_SERVER_CERTIFICATE)'
+        description: 'Whether to trust the server certificate (set to true for development environments)'
+        default: true
+      DB_CONNECTION_TIMEOUT:
+        type: integer
+        title: 'DB Connection Timeout (ms)'
+        description: 'Database connection attempt timeout (milliseconds)'
+        default: 30000
+      DB_REQUEST_TIMEOUT:
+        type: integer
+        title: 'DB Request Timeout (ms)'
+        description: 'Database request timeout (milliseconds)'
+        default: 30000
+      DB_POOL_MIN:
+        type: integer
+        title: 'DB Connection Pool Min'
+        description: 'Minimum connection pool size'
+        default: 2
+      DB_POOL_MAX:
+        type: integer
+        title: 'DB Connection Pool Max'
+        description: 'Maximum connection pool size'
+        default: 10
+      DB_POOL_IDLE_TIMEOUT:
+        type: integer
+        title: 'DB Connection Pool Idle Timeout (ms)'
+        description: 'Idle connection timeout (milliseconds)'
+        default: 30000
+      NODE_ENV:
+        type: string
+        title: 'Node.js Environment'
+        description: 'Application execution environment (development, production, test, etc.)'
+        default: 'production'
+        enum:
+          - 'development'
+          - 'production'
+          - 'test'
+      LOG_LEVEL:
+        type: string
+        title: 'Log Level'
+        description: 'Logging level'
+        default: 'info'
+        enum:
+          - 'error'
+          - 'warn'
+          - 'info'
+          - 'http'
+          - 'verbose'
+          - 'debug'
+          - 'silly'
+
+  # commandFunction is a JavaScript function that returns the actual command, arguments, and environment variables to start the MCP server.
+  # This function receives a config object that has passed validation through the configSchema defined above.
+  commandFunction: |
+    (config) => {
+      const env = {
+        DB_HOST: config.DB_HOST,
+        DB_PORT: String(config.DB_PORT),
+        DB_DATABASE: config.DB_DATABASE,
+        DB_USER: config.DB_USER,
+        DB_PASSWORD: config.DB_PASSWORD,
+        DB_ENCRYPT: String(config.DB_ENCRYPT),
+        DB_TRUST_SERVER_CERTIFICATE: String(config.DB_TRUST_SERVER_CERTIFICATE),
+        DB_CONNECTION_TIMEOUT: String(config.DB_CONNECTION_TIMEOUT),
+        DB_REQUEST_TIMEOUT: String(config.DB_REQUEST_TIMEOUT),
+        DB_POOL_MIN: String(config.DB_POOL_MIN),
+        DB_POOL_MAX: String(config.DB_POOL_MAX),
+        DB_POOL_IDLE_TIMEOUT: String(config.DB_POOL_IDLE_TIMEOUT),
+        NODE_ENV: config.NODE_ENV,
+        LOG_LEVEL: config.LOG_LEVEL,
+      };
+
+      return {
+        command: 'node',
+        args: ['build/index.js'], // Refer to the main field or bin settings in package.json
+        env: env
+      };
+    }
+
+# Build options (optional)
+# This section is commented out or omitted as there is no Dockerfile in the current project.
+# If Docker build is required, uncomment this section and specify the paths.
+# build:
+#   dockerfile: ./Dockerfile # Relative path from smithery.yaml file
+#   dockerBuildPath: .       # Docker build context path
