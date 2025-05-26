@@ -1,1 +1,1 @@
-# mcp-sql
+Init
