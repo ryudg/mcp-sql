@@ -7,12 +7,17 @@ startCommand:
   configSchema:
     type: object
     required:
+      - appVersion
       - DB_HOST
       - DB_PORT
       - DB_DATABASE
       - DB_USER
       - DB_PASSWORD
     properties:
+      appVersion:
+        type: string
+        title: 'Application Version'
+        description: 'Application version (e.g., the version value from package.json)'
       DB_HOST:
         type: string
         title: 'Database Host'
@@ -98,6 +103,7 @@ startCommand:
   commandFunction: |
     (config) => {
       const env = {
+        npm_package_version: config.appVersion, // Referenced as process.env.npm_package_version in server code
         DB_HOST: config.DB_HOST,
         DB_PORT: String(config.DB_PORT),
         DB_DATABASE: config.DB_DATABASE,

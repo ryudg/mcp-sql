@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+Dockerfile
+.dockerignore
+README.md
+coverage
+lcov-report
+# 기타 필요 없는 파일들 

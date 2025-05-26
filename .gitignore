@@ -180,7 +180,7 @@ private.key
 *.pfx
 
 # Docker
-.dockerignore
+# .dockerignore
 Dockerfile.local
 docker-compose.override.yml
 
